@@ -1,0 +1,145 @@
+
+
+-- -----------------------------------------------------
+-- Table `category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `category` (
+  `cat_id` INT NOT NULL AUTO_INCREMENT,
+  `cat_name` VARCHAR(30) NULL,
+  `cat_description` VARCHAR(255) NULL,
+  PRIMARY KEY (`cat_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `measure`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `measure` (
+  `ms_id` INT NOT NULL AUTO_INCREMENT,
+  `ms_long_name` VARCHAR(25) NULL,
+  `ms_short_name` VARCHAR(5) NULL,
+  PRIMARY KEY (`ms_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `product`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `product` (
+  `pr_id` INT NOT NULL AUTO_INCREMENT,
+  `measure_ms_id` INT NOT NULL,
+  `pr_name` VARCHAR(30) NULL,
+  `pr_description` VARCHAR(255) NULL,
+  PRIMARY KEY (`pr_id`),
+  INDEX `fk_product_measure1_idx` (`measure_ms_id` ASC) VISIBLE,
+  CONSTRAINT `fk_product_measure1`
+    FOREIGN KEY (`measure_ms_id`)
+    REFERENCES `measure` (`ms_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `category_has_product`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `category_has_product` (
+  `category_cat_id` INT NOT NULL,
+  `product_pr_id` INT NOT NULL,
+  PRIMARY KEY (`category_cat_id`, `product_pr_id`),
+  INDEX `fk_category_has_product_product1_idx` (`product_pr_id` ASC) VISIBLE,
+  INDEX `fk_category_has_product_category_idx` (`category_cat_id` ASC) VISIBLE,
+  CONSTRAINT `fk_category_has_product_category`
+    FOREIGN KEY (`category_cat_id`)
+    REFERENCES `category` (`cat_id`),
+  CONSTRAINT `fk_category_has_product_product1`
+    FOREIGN KEY (`product_pr_id`)
+    REFERENCES `product` (`pr_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `recipe`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `recipe` (
+  `rp_id` INT NOT NULL AUTO_INCREMENT,
+  `rp_name` VARCHAR(50) NULL,
+  `rp_cooking` VARCHAR(255) NULL,
+  PRIMARY KEY (`rp_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `meal`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `meal` (
+  `ml_id` INT NOT NULL AUTO_INCREMENT,
+  `recipe_rp_id` INT NOT NULL,
+  `ml_name` VARCHAR(50) NULL,
+  `ml_description` VARCHAR(255) NULL,
+  PRIMARY KEY (`ml_id`),
+  INDEX `fk_meal_recipe1_idx` (`recipe_rp_id` ASC) VISIBLE,
+  CONSTRAINT `fk_meal_recipe1`
+    FOREIGN KEY (`recipe_rp_id`)
+    REFERENCES `recipe` (`rp_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `shop_list`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `shop_list` (
+  `lst_id` INT NOT NULL AUTO_INCREMENT,
+  `product_pr_id` INT NOT NULL,
+  `lst_amount` INT NULL,
+  `lst_date` DATE NULL,
+  `lst_bought` TINYINT(1) NULL,
+  PRIMARY KEY (`lst_id`),
+  INDEX `fk_shop_list_product1_idx` (`product_pr_id` ASC) VISIBLE,
+  CONSTRAINT `fk_shop_list_product1`
+    FOREIGN KEY (`product_pr_id`)
+    REFERENCES `product` (`pr_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `food`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `food` (
+  `fd_id` INT NOT NULL AUTO_INCREMENT,
+  `meal_ml_id` INT NOT NULL,
+  `shop_list_lst_id` INT NOT NULL,
+  `fd_amount` INT NULL,
+  `fd_manufacture_date` DATE NULL,
+  `fd_expiration_date` DATE NULL,
+  `fd_cost` FLOAT(10,2) NULL,
+  PRIMARY KEY (`fd_id`),
+  INDEX `fk_food_meal1_idx` (`meal_ml_id` ASC) VISIBLE,
+  INDEX `fk_food_shop_list1_idx` (`shop_list_lst_id` ASC) VISIBLE,
+  CONSTRAINT `fk_food_meal1`
+    FOREIGN KEY (`meal_ml_id`)
+    REFERENCES `meal` (`ml_id`),
+  CONSTRAINT `fk_food_shop_list1`
+    FOREIGN KEY (`shop_list_lst_id`)
+    REFERENCES `shop_list` (`lst_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `recipe_has_product`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `recipe_has_product` (
+  `product_pr_id` INT NOT NULL,
+  `recipe_rp_id` INT NOT NULL,
+  `amount` INT NULL,
+  PRIMARY KEY (`product_pr_id`, `recipe_rp_id`),
+  INDEX `fk_product_has_recipe_recipe1_idx` (`recipe_rp_id` ASC) VISIBLE,
+  INDEX `fk_product_has_recipe_product1_idx` (`product_pr_id` ASC) VISIBLE,
+  CONSTRAINT `fk_product_has_recipe_product1`
+    FOREIGN KEY (`product_pr_id`)
+    REFERENCES `product` (`pr_id`),
+  CONSTRAINT `fk_product_has_recipe_recipe1`
+    FOREIGN KEY (`recipe_rp_id`)
+    REFERENCES `recipe` (`rp_id`))
+ENGINE = InnoDB;
+
+
+
