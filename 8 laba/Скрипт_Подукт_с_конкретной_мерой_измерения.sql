@@ -1,0 +1,1 @@
+SELECT pr_name, measure_ms_id FROM product WHERE measure_ms_id = 1 OR measure_ms_id = 3 ORDER BY pr_name;
