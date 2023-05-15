@@ -1,0 +1,1 @@
+SELECT * FROM product FULL JOIN measure ON measure_ms_id=ms_id ORDER BY pr_name;

@@ -1,0 +1,1 @@
+SELECT * FROM recipe RIGHT JOIN meal ON rp_id=ml_id;

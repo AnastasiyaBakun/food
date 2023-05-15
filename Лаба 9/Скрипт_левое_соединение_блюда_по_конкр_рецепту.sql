@@ -1,0 +1,1 @@
+SELECT * FROM meal LEFT JOIN recipe ON ml_id = rp_id WHERE recipe_rp_id =16;
